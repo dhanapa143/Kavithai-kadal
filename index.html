@@ -13,20 +13,21 @@
 }
 
 body {
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     font-family: 'Segoe UI', sans-serif;
     background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364);
     color: white;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     text-align: center;
-    height: 100vh;
-    padding: 20px;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 700px;
     width: 100%;
     z-index: 10;
 }
@@ -52,24 +53,36 @@ button:hover {
 
 #poem {
     margin-top: 30px;
-    font-size: 18px;
+    font-size: 20px;
     white-space: pre-line;
+    line-height: 1.8;
     min-height: 200px;
 }
 
-/* Stars */
+/* ✨ Glitter Stars */
 .star {
     position: fixed;
-    width: 2px;
-    height: 2px;
+    width: 3px;
+    height: 3px;
     background: white;
     border-radius: 50%;
-    animation: twinkle 2s infinite alternate;
+    box-shadow: 0 0 6px white, 0 0 12px #ffffffaa;
+    animation: twinkle 2s infinite ease-in-out alternate;
 }
 
 @keyframes twinkle {
-    from { opacity: 0.2; }
-    to { opacity: 1; }
+    0% { 
+        opacity: 0.2;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+    100% { 
+        opacity: 0.3;
+        transform: scale(0.9);
+    }
 }
 
 /* Floating Hearts */
@@ -119,8 +132,8 @@ button:hover {
 <body>
 
 <div class="container">
-    <h2>Click for a Magical Night Message 💌</h2>
-    <button onclick="startExperience()">Click Here</button>
+    <h2 id="title">Click for a Magical Night Message 💌</h2>
+    <button id="startBtn" onclick="startExperience()">Click Here</button>
     <div id="poem"></div>
 </div>
 
@@ -138,8 +151,8 @@ const text = `எப்படி வந்தாய் தெரியல,
 உன் தோழன் நா இருக்கேன்.....
 வழி தெரியாம நீ நின்னா கை புடிச்சு 🤝நான் நினைப்பேன்👫 ......
 கஷ்ட முடியும் வர🥹
- பாதை தெரியும் வர  😇
- கண்ணிர் துடைக்கும் வர 🥲
+பாதை தெரியும் வர  😇
+கண்ணிர் துடைக்கும் வர 🥲
 நீ சிரிக்கும் வர☺️ ....
 உன் தோழன் நா இருக்கேன்💫🤜🤛.....
 
@@ -156,10 +169,11 @@ const text = `எப்படி வந்தாய் தெரியல,
 காதிரிக்கிரண்🍃........ !!`;
 
 let i = 0;
-let speed = 50;
+let speed = 45;
 
 function startExperience() {
-    document.querySelector("button").style.display = "none";
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("title").style.display = "none";
     document.getElementById("bgMusic").play();
     typeWriter();
 }
@@ -168,19 +182,21 @@ function typeWriter() {
     if (i < text.length) {
         document.getElementById("poem").innerHTML += text.charAt(i);
         i++;
+        window.scrollTo(0, document.body.scrollHeight);
         setTimeout(typeWriter, speed);
     } else {
         launchFireworks();
     }
 }
 
-/* Stars */
-for (let i = 0; i < 120; i++) {
+/* ✨ Create Glitter Stars */
+for (let i = 0; i < 150; i++) {
     const star = document.createElement("div");
     star.classList.add("star");
     star.style.top = Math.random() * 100 + "vh";
     star.style.left = Math.random() * 100 + "vw";
     star.style.animationDuration = (Math.random() * 3 + 1) + "s";
+    star.style.animationDelay = (Math.random() * 5) + "s";
     document.body.appendChild(star);
 }
 
@@ -208,25 +224,6 @@ setInterval(() => {
     document.body.appendChild(petal);
     setTimeout(()=>petal.remove(),8000);
 },800);
-
-/* Heart burst on click */
-document.addEventListener("click", function(e) {
-    for (let i=0;i<8;i++){
-        const burst=document.createElement("div");
-        burst.innerHTML="💖";
-        burst.style.position="fixed";
-        burst.style.left=e.clientX+"px";
-        burst.style.top=e.clientY+"px";
-        burst.style.transition="1s";
-        document.body.appendChild(burst);
-        setTimeout(()=>{
-            burst.style.left=(e.clientX+(Math.random()*200-100))+"px";
-            burst.style.top=(e.clientY-(Math.random()*200))+"px";
-            burst.style.opacity="0";
-        },10);
-        setTimeout(()=>burst.remove(),1000);
-    }
-});
 
 /* Fireworks */
 function launchFireworks(){
